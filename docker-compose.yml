@@ -1,31 +1,38 @@
 services:
   store:
-    container_name: store
-    image: bhs/store
-    build: .
-    # links:
-    #   - "postgres"
+    container_name: amarassist
+    image: REGISTRYAWS/IMAGEM:$GENERAL_TAG
+    restart: always
     ports:
-      - 8000:8000
+      - 80:8000
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_DATABASE: amarassist
+      DB_USERNAME: amarassist
+      DB_PASSWORD: teste123
     networks:
       - bhslink
     depends_on:
-      - postgres
-      
-  postgres:
-    container_name: postgres
-    image: postgres
+      - mysql    
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
+    volumes:
+      - db_data:/var/lib/mysql        
     environment:
-      POSTGRES_PASSWORD: teste123
-      POSTGRES_USER: postgres
-      POSTGRES_DB: store
-    # ports: 
-    #   - 5432:5432
+      MYSQL_ROOT_PASSWORD: teste123
+      MYSQL_DATABASE: amarassist
+      MYSQL_USER: amarassist
+      MYSQL_PASSWORD: teste123        
+
     networks:
      - bhslink
-  
+
+volume:
+  db_data:
+
 networks:
   bhslink:
-
-  
