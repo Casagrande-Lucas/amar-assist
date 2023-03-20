@@ -171,6 +171,51 @@ const updateClient = (client) => {
                         '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
                         '<input value="' + client.contact +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact">'+
                     '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="postal_code" class="block text-gray-700 font-bold mb-2">CEP:</label>'+
+                        '<input value="' + client.address.postal_code +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="postal_code" placeholder="13245-678">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="address_line1" class="block text-gray-700 font-bold mb-2">Endereço:</label>'+
+                        '<input value="' + client.address.address_line1 +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address_line1" placeholder="Rua, Numero, Bairro">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="city" class="block text-gray-700 font-bold mb-2">Cidade:</label>'+
+                        '<input value="' + client.address.city +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="city" placeholder="São Paulo">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="state" class="block text-gray-700 font-bold mb-2">Estdos</label>'+
+                        '<select id="state" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">'+
+                            '<option value="' + client.address.state +'" selected>Selecione um Estado</option>'+
+                            '<option value="AC">Acre</option>'+
+                            '<option value="AL">Alagoas</option>'+
+                            '<option value="AP">Amapá</option>'+
+                            '<option value="AM">Amazonas</option>'+
+                            '<option value="BA">Bahia</option>'+
+                            '<option value="CE">Ceará</option>'+
+                            '<option value="DF">Distrito Federal</option>'+
+                            '<option value="ES">Espírito Santo</option>'+
+                            '<option value="GO">Goiás</option>'+
+                            '<option value="MA">Maranhão</option>'+
+                            '<option value="MT">Mato Grosso</option>'+
+                            '<option value="MS">Mato Grosso do Sul</option>'+
+                            '<option value="MG">Minas Gerais</option>'+
+                            '<option value="PA">Pará</option>'+
+                            '<option value="PB">Paraíba</option>'+
+                            '<option value="PR">Paraná</option>'+
+                            '<option value="PE">Pernambuco</option>'+
+                            '<option value="PI">Piauí</option>'+
+                            '<option value="RJ">Rio de Janeiro</option>'+
+                            '<option value="RN">Rio Grande do Norte</option>'+
+                            '<option value="RS">Rio Grande do Sul</option>'+
+                            '<option value="RO">Rondônia</option>'+
+                            '<option value="RR">Roraima</option>'+
+                            '<option value="SC">Santa Catarina</option>'+
+                            '<option value="SP">São Paulo</option>'+
+                            '<option value="SE">Sergipe</option>'+
+                            '<option value="TO">Tocantins</option>'+
+                        '</select>'+
+                    '</div>'+
                 '</form>',
         showCancelButton: true,
         confirmButtonText: 'Salvar',
@@ -199,16 +244,32 @@ const updateClient = (client) => {
                 }
                 documentField.value = formattedValue;
             });
+
+            const postalCodeInput = document.querySelector('#postal_code');
+
+            postalCodeInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 8) {
+                    value = value.slice(0, 8);
+                }
+                value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                this.value = value;
+            });
         },
         preConfirm: () => {
-            const name = Swal.getPopup().querySelector('#name').value
-            const document = Swal.getPopup().querySelector('#document').value
-            const contact = Swal.getPopup().querySelector('#contact').value
-            return { name: name, document: document, contact: contact }
+            client.name = Swal.getPopup().querySelector('#name').value
+            client.document = Swal.getPopup().querySelector('#document').value
+            client.contact = Swal.getPopup().querySelector('#contact').value
+            client.address.postal_code = Swal.getPopup().querySelector('#postal_code').value
+            client.address.address_line1 = Swal.getPopup().querySelector('#address_line1').value
+            client.address.city = Swal.getPopup().querySelector('#city').value
+            client.address.state = Swal.getPopup().querySelector('#state').value
+
+            return {client: client, address: client.address}
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            form.put(route('client.update', [client, result.value]))
+            form.put(route('client.update', [client.id, result.value.client]))
         }
     })
 };
@@ -268,7 +329,7 @@ const updateClient = (client) => {
                                     </td>
                                     <td class="px-6 py-4">
                                         <button type="button" data-bs-toggle="modal" data-bs-target="#modalEdit" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
-                                        @click="updateClient(client, client.name)">
+                                        @click="updateClient(client)">
                                             <i class="fa-solid fa-edit"></i>
                                         </button>
                                     </td>

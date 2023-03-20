@@ -104,10 +104,20 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
-        $request->request->add(['contact' => preg_replace("/[^0-9]/", "", $request->input('contact'))]);
-        $request->request->add(['document' => preg_replace("/[^0-9]/", "", $request->input('document'))]);
+        $clientData = $request->all();
+        $addressData = $clientData['address'];
+        unset($clientData['address']);
 
-        $client->fill($request->input())->saveOrFail();
+        $addressData['postal_code'] = preg_replace("/[^0-9]/", "", $addressData['postal_code']);
+
+        $clientData['document'] = preg_replace("/[^0-9]/", "", $clientData['document']);
+        $clientData['contact'] = preg_replace("/[^0-9]/", "", $clientData['contact']);
+
+        $client->fill($clientData)->saveOrFail();
+
+        $address = Address::find($addressData['id']);
+        $address->fill($addressData)->saveOrFail();
+
         return redirect()->route('client.index');
 
     }

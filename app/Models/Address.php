@@ -23,9 +23,4 @@ class Address extends Model
         $parte2 = substr($value, 5, 3);
         return $parte1 . '-' . $parte2;
     }
-
-    public function client()
-    {
-        return $this->belongsTo(Client::class);
-    }
 }
