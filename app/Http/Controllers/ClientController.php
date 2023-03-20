@@ -50,8 +50,10 @@ class ClientController extends Controller
             $request->request->add(['type_document' => 'cnpj']);
         }
 
-        $request->request->add(['client_status' => 1]);
+        $request->request->add(['contact' => preg_replace("/[^0-9]/", "", $request->input('contact'))]);
+        $request->request->add(['document' => preg_replace("/[^0-9]/", "", $request->input('document'))]);
 
+        $request->request->add(['client_status' => 1]);
         $client = new Client($request->input());
         $client->save();
         return redirect()->route('client.index');
@@ -83,12 +85,14 @@ class ClientController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int $id
+     * @param  \App\Models\Client $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, Client $client)
     {
-        $client = Client::find($id);
+        $request->request->add(['contact' => preg_replace("/[^0-9]/", "", $request->input('contact'))]);
+        $request->request->add(['document' => preg_replace("/[^0-9]/", "", $request->input('document'))]);
+        
         $client->fill($request->input())->saveOrFail();
         return redirect()->route('client.index');
 

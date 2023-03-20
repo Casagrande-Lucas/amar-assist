@@ -19,6 +19,7 @@ const deleteClient = (client, name) => {
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: '<i class="fa-solid fa-check"></i> Sim, Inativar cadastro',
+        confirmButtonColor: 'red',
         cancelButtonText: '<i class="fa-solid fa-ban"></i> cancelar',
     }).then((result) => {
         if(result.isConfirmed) {
@@ -34,24 +35,48 @@ const createClient = () => {
 
     swalWithTailwindcssButtons.fire({
         title: 'Novo Cliente',
-        html: '<form>' +
-                '<div class="form-group">' +
-                '<label for="name" class="col-form-label">Nome:</label>' +
-                '<input type="text" class="form-control" id="name">' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label for="document" class="col-form-label">CPF/CNPJ:</label>' +
-                '<input type="text" class="form-control" id="document">' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label for="contact" class="col-form-label">Telefone:</label>' +
-                '<input type="text" class="form-control" id="contact">' +
-                '</div>' +
+        html: '<form class="px-8 pt-6 pb-8 mb-4">'+
+                    '<div class="mb-4">'+
+                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name">'+
+                    '</div>'+
+                    '<div class="mb-4">'+
+                        '<label for="document" class="block text-gray-700 font-bold mb-2">CPF/CNPJ:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact">'+
+                    '</div>'+
                 '</form>',
         showCancelButton: true,
-        confirmButtonText: 'Salvar',
+        confirmButtonText: 'Criar',
+        confirmButtonColor: 'green',
         cancelButtonText: 'Cancelar',
         focusConfirm: false,
+        didOpen: () => {
+            const contactInput = Swal.getPopup().querySelector('#contact')
+            contactInput.addEventListener('input', () => {
+                let contactValue = contactInput.value
+                contactValue = contactValue.replace(/\D/g, '')
+                contactValue = contactValue.slice(0, 11)
+                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1) $2 ')
+                contactValue = contactValue.replace(/(\d)(\d{4})$/, '$1-$2')
+                contactInput.value = contactValue
+            })
+
+            const documentField = Swal.getPopup().querySelector('#document');
+            documentField.addEventListener('input', function() {
+                const valueDocument = documentField.value.replace(/\D/g, '');
+                let formattedValue = '';
+                if (valueDocument.length <= 11) {
+                    formattedValue = valueDocument.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, '$1.$2.$3-$4');
+                } else {
+                    formattedValue = valueDocument.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
+                }
+                documentField.value = formattedValue;
+            });
+        },
         preConfirm: () => {
             const name = Swal.getPopup().querySelector('#name').value
             const document = Swal.getPopup().querySelector('#document').value
@@ -61,7 +86,6 @@ const createClient = () => {
     }).then((result) => {
         if (result.isConfirmed) {
             form.post(route('client.store', result.value))
-            // faça a lógica de envio do formulário aqui
         }
     })
 };
@@ -73,34 +97,57 @@ const updateClient = (client) => {
     
     swalWithTailwindcssButtons.fire({
         title: 'Editar Cliente',
-        html: '<form>' +
-                '<div class="form-group">' +
-                '<label for="name" class="col-form-label">Nome:</label>' +
-                '<input type="text" class="form-control" id="name" value="' + client.name +'">' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label for="document" class="col-form-label">CPF/CNPJ:</label>' +
-                '<input type="text" class="form-control" id="document" value="' + client.document +'">' +
-                '</div>' +
-                '<div class="form-group">' +
-                '<label for="contact" class="col-form-label">Telefone:</label>' +
-                '<input type="text" class="form-control" id="contact" value="' + client.contact +'">' +
-                '</div>' +
+        html: '<form class="px-8 pt-6 pb-8 mb-4">'+
+                    '<div class="mb-4">'+
+                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome:</label>'+
+                        '<input value="' + client.name +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name">'+
+                    '</div>'+
+                    '<div class="mb-4">'+
+                        '<label for="document" class="block text-gray-700 font-bold mb-2">CPF/CNPJ:</label>'+
+                        '<input value="' + client.document +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
+                        '<input value="' + client.contact +'" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact">'+
+                    '</div>'+
                 '</form>',
         showCancelButton: true,
         confirmButtonText: 'Salvar',
+        confirmButtonColor: 'green',
         cancelButtonText: 'Cancelar',
         focusConfirm: false,
+        didOpen: () => {
+            const contactInput = Swal.getPopup().querySelector('#contact')
+            contactInput.addEventListener('input', () => {
+                let contactValue = contactInput.value
+                contactValue = contactValue.replace(/\D/g, '')
+                contactValue = contactValue.slice(0, 11)
+                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1) $2 ')
+                contactValue = contactValue.replace(/(\d)(\d{4})$/, '$1-$2')
+                contactInput.value = contactValue
+            })
+
+            const documentField = Swal.getPopup().querySelector('#document');
+            documentField.addEventListener('input', function() {
+                const valueDocument = documentField.value.replace(/\D/g, '');
+                let formattedValue = '';
+                if (valueDocument.length <= 11) {
+                    formattedValue = valueDocument.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, '$1.$2.$3-$4');
+                } else {
+                    formattedValue = valueDocument.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
+                }
+                documentField.value = formattedValue;
+            });
+        },
         preConfirm: () => {
-            client.name = Swal.getPopup().querySelector('#name').value
-            client.document = Swal.getPopup().querySelector('#document').value
-            client.contact = Swal.getPopup().querySelector('#contact').value
+            const name = Swal.getPopup().querySelector('#name').value
+            const document = Swal.getPopup().querySelector('#document').value
+            const contact = Swal.getPopup().querySelector('#contact').value
             return { name: name, document: document, contact: contact }
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            form.post(route('client.store', result.value))
-            // faça a lógica de envio do formulário aqui
+            form.put(route('client.update', [client, result.value]))
         }
     })
 };
