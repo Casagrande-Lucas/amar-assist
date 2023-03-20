@@ -48,6 +48,51 @@ const createClient = () => {
                         '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" placeholder="(11)91234-5678">'+
                     '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="postal_code" class="block text-gray-700 font-bold mb-2">CEP:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="postal_code" placeholder="13245-678">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="address_line1" class="block text-gray-700 font-bold mb-2">Endereço:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address_line1" placeholder="Rua, Numero, Bairro">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="city" class="block text-gray-700 font-bold mb-2">Cidade:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="city" placeholder="São Paulo">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="state" class="block text-gray-700 font-bold mb-2">Estdos</label>'+
+                        '<select id="state" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">'+
+                            '<option selected>Selecione um Estado</option>'+
+                            '<option value="AC">Acre</option>'+
+                            '<option value="AL">Alagoas</option>'+
+                            '<option value="AP">Amapá</option>'+
+                            '<option value="AM">Amazonas</option>'+
+                            '<option value="BA">Bahia</option>'+
+                            '<option value="CE">Ceará</option>'+
+                            '<option value="DF">Distrito Federal</option>'+
+                            '<option value="ES">Espírito Santo</option>'+
+                            '<option value="GO">Goiás</option>'+
+                            '<option value="MA">Maranhão</option>'+
+                            '<option value="MT">Mato Grosso</option>'+
+                            '<option value="MS">Mato Grosso do Sul</option>'+
+                            '<option value="MG">Minas Gerais</option>'+
+                            '<option value="PA">Pará</option>'+
+                            '<option value="PB">Paraíba</option>'+
+                            '<option value="PR">Paraná</option>'+
+                            '<option value="PE">Pernambuco</option>'+
+                            '<option value="PI">Piauí</option>'+
+                            '<option value="RJ">Rio de Janeiro</option>'+
+                            '<option value="RN">Rio Grande do Norte</option>'+
+                            '<option value="RS">Rio Grande do Sul</option>'+
+                            '<option value="RO">Rondônia</option>'+
+                            '<option value="RR">Roraima</option>'+
+                            '<option value="SC">Santa Catarina</option>'+
+                            '<option value="SP">São Paulo</option>'+
+                            '<option value="SE">Sergipe</option>'+
+                            '<option value="TO">Tocantins</option>'+
+                        '</select>'+
+                    '</div>'+
                 '</form>',
         showCancelButton: true,
         confirmButtonText: 'Criar',
@@ -75,6 +120,17 @@ const createClient = () => {
                     formattedValue = valueDocument.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
                 }
                 documentField.value = formattedValue;
+            });
+
+            const postalCodeInput = document.querySelector('#postal_code');
+
+            postalCodeInput.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 8) {
+                    value = value.slice(0, 8);
+                }
+                value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                this.value = value;
             });
         },
         preConfirm: () => {
