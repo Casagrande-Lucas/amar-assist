@@ -37,16 +37,16 @@ const createClient = () => {
         title: 'Novo Cliente',
         html: '<form class="px-8 pt-6 pb-8 mb-4">'+
                     '<div class="mb-4">'+
-                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome:</label>'+
-                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name">'+
+                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome Completo / Razão Social:</label>'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" placeholder="Maria da Silva ou Amar Assist">'+
                     '</div>'+
                     '<div class="mb-4">'+
                         '<label for="document" class="block text-gray-700 font-bold mb-2">CPF/CNPJ:</label>'+
-                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document">'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document" placeholder="123.456.789-10 ou 12.345.678/0001-09">'+
                     '</div>'+
                     '<div class="mb-6">'+
                         '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
-                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact">'+
+                        '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" placeholder="(11)91234-5678">'+
                     '</div>'+
                 '</form>',
         showCancelButton: true,
@@ -60,7 +60,7 @@ const createClient = () => {
                 let contactValue = contactInput.value
                 contactValue = contactValue.replace(/\D/g, '')
                 contactValue = contactValue.slice(0, 11)
-                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1) $2 ')
+                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1)$2')
                 contactValue = contactValue.replace(/(\d)(\d{4})$/, '$1-$2')
                 contactInput.value = contactValue
             })
@@ -122,7 +122,7 @@ const updateClient = (client) => {
                 let contactValue = contactInput.value
                 contactValue = contactValue.replace(/\D/g, '')
                 contactValue = contactValue.slice(0, 11)
-                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1) $2 ')
+                contactValue = contactValue.replace(/^(\d{2})(\d)/g, '($1)$2')
                 contactValue = contactValue.replace(/(\d)(\d{4})$/, '$1-$2')
                 contactInput.value = contactValue
             })

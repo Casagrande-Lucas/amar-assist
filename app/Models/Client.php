@@ -51,13 +51,13 @@ class Client extends Model
             $parte3 = substr($value, 3, 4);
             $parte4 = substr($value, 7, 4);
         
-            return '(' . $parte1 . ') ' . $parte2 . ' ' . $parte3 . '-' . $parte4;
+            return '(' . $parte1 . ')' . $parte2 . $parte3 . '-' . $parte4;
         } else {
             $parte1 = substr($value, 0, 2);
             $parte2 = substr($value, 2, 4);
             $parte3 = substr($value, 6, 4);
         
-            return '(' . $parte1 . ') ' . $parte2 . '-' . $parte3;
+            return '(' . $parte1 . ')' . $parte2 . '-' . $parte3;
         }
     }
 
