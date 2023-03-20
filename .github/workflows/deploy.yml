@@ -33,17 +33,20 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{env.GENERAL_TAG}} .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{env.GENERAL_TAG}}
 
+    outputs:
+      general-tag: ${{env.GENERAL_TAG}}
+
+#==========================================================================================================
   deploy:
     runs-on: ubuntu-latest
     environment: dev
+    env: 
+      GENERAL_TAG: ${{ needs.build.outputs.general-tag }}
     needs: ["build"]
     steps:
       - uses: actions/checkout@v3
 
-      - name: Generate General Tag(Run Date and Github Run Number)
-        run: echo "GENERAL_TAG=$(date +'%Y%m%d_'$GITHUB_RUN_NUMBER)" >> $GITHUB_ENV
-
-      - name: test
+      - name: Deploy EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }} 
