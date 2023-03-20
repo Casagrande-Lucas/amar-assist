@@ -39,23 +39,37 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:246',
-            'document' => 'required|max:18',
-            'contact' => 'required|max:16'
+            'client.name' => 'required|max:246',
+            'client.document' => 'required|max:18',
+            'client.contact' => 'required|max:16',
+            'address.postal_code' => 'required|max:9',
+            'address.address_line1' => 'max:246',
+            'address.city' => 'max:150',
+            'address.state' => 'max:2',
         ]);
 
-        if(strlen($request->input('contact')) == 11) {
-            $request->request->add(['type_document' => 'cpf']);
+        $clientData = $request->input('client');
+        $addressData = $request->input('address');
+
+        if(strlen($clientData['contact']) == 11) {
+            $clientData['type_document'] = 'cpf';
         } else {
-            $request->request->add(['type_document' => 'cnpj']);
+            $clientData['type_document'] = 'cnpj';
+
         }
 
-        $request->request->add(['contact' => preg_replace("/[^0-9]/", "", $request->input('contact'))]);
-        $request->request->add(['document' => preg_replace("/[^0-9]/", "", $request->input('document'))]);
+        $clientData['contact'] = preg_replace("/[^0-9]/", "", $clientData['contact']);
+        $clientData['document'] = preg_replace("/[^0-9]/", "", $clientData['document']);
+        $clientData['client_status'] = 1;
 
-        $request->request->add(['client_status' => 1]);
-        $client = new Client($request->input());
+        $client = new Client($clientData);
         $client->save();
+
+        $addressData['client_id'] = $client->id;
+        $addressData['postal_code'] = preg_replace("/[^0-9]/", "", $addressData['postal_code']);
+        $address = new Address($addressData);
+        $address->save();
+
         return redirect()->route('client.index');
     }
 
@@ -92,7 +106,7 @@ class ClientController extends Controller
     {
         $request->request->add(['contact' => preg_replace("/[^0-9]/", "", $request->input('contact'))]);
         $request->request->add(['document' => preg_replace("/[^0-9]/", "", $request->input('document'))]);
-        
+
         $client->fill($request->input())->saveOrFail();
         return redirect()->route('client.index');
 

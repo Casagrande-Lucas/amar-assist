@@ -137,7 +137,12 @@ const createClient = () => {
             const name = Swal.getPopup().querySelector('#name').value
             const document = Swal.getPopup().querySelector('#document').value
             const contact = Swal.getPopup().querySelector('#contact').value
-            return { name: name, document: document, contact: contact }
+            const postal_code = Swal.getPopup().querySelector('#postal_code').value
+            const address_line1 = Swal.getPopup().querySelector('#address_line1').value
+            const city = Swal.getPopup().querySelector('#city').value
+            const state = Swal.getPopup().querySelector('#state').value
+
+            return {client: { name: name, document: document, contact: contact }, address: {postal_code: postal_code, address_line1: address_line1, city: city, state: state}}
         }
     }).then((result) => {
         if (result.isConfirmed) {

@@ -9,7 +9,7 @@ class Address extends Model
 {
     use HasFactory;
     
-    protected $fillabel = ['postal_code', 'address_line1', 'city', 'state'];
+    protected $fillable = ['postal_code', 'address_line1', 'city', 'state', 'client_id'];
 
     /**
      * Get the clients document.
