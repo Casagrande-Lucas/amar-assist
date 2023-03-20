@@ -43,9 +43,9 @@ class ClientController extends Controller
             'client.document' => 'required|max:18',
             'client.contact' => 'required|max:16',
             'address.postal_code' => 'required|max:9',
-            'address.address_line1' => 'max:246',
-            'address.city' => 'max:150',
-            'address.state' => 'max:2',
+            'address.address_line1' => 'required|max:246',
+            'address.city' => 'required|max:150',
+            'address.state' => 'required|max:2',
         ]);
 
         $clientData = $request->input('client');

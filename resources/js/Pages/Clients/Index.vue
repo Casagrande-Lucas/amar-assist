@@ -37,31 +37,31 @@ const createClient = () => {
         title: 'Novo Cliente',
         html: '<form class="px-8 pt-6 pb-8 mb-4">'+
                     '<div class="mb-4">'+
-                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome Completo / Razão Social:</label>'+
+                        '<label for="name" class="block text-gray-700 font-bold mb-2">Nome Completo / Razão Social<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" placeholder="Maria da Silva ou Amar Assist">'+
                     '</div>'+
                     '<div class="mb-4">'+
-                        '<label for="document" class="block text-gray-700 font-bold mb-2">CPF/CNPJ:</label>'+
+                        '<label for="document" class="block text-gray-700 font-bold mb-2">CPF/CNPJ<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="document" placeholder="123.456.789-10 ou 12.345.678/0001-09">'+
                     '</div>'+
                     '<div class="mb-6">'+
-                        '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone:</label>'+
+                        '<label for="contact" class="block text-gray-700 font-bold mb-2">Telefone<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="contact" placeholder="(11)91234-5678">'+
                     '</div>'+
                     '<div class="mb-6">'+
-                        '<label for="postal_code" class="block text-gray-700 font-bold mb-2">CEP:</label>'+
+                        '<label for="postal_code" class="block text-gray-700 font-bold mb-2">CEP<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="postal_code" placeholder="13245-678">'+
                     '</div>'+
                     '<div class="mb-6">'+
-                        '<label for="address_line1" class="block text-gray-700 font-bold mb-2">Endereço:</label>'+
+                        '<label for="address_line1" class="block text-gray-700 font-bold mb-2">Endereço<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="address_line1" placeholder="Rua, Numero, Bairro">'+
                     '</div>'+
                     '<div class="mb-6">'+
-                        '<label for="city" class="block text-gray-700 font-bold mb-2">Cidade:</label>'+
+                        '<label for="city" class="block text-gray-700 font-bold mb-2">Cidade<i class="text-red-900">*</i>:</label>'+
                         '<input type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="city" placeholder="São Paulo">'+
                     '</div>'+
                     '<div class="mb-6">'+
-                        '<label for="state" class="block text-gray-700 font-bold mb-2">Estdos</label>'+
+                        '<label for="state" class="block text-gray-700 font-bold mb-2">Estdos<i class="text-red-900">*</i>:</label>'+
                         '<select id="state" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">'+
                             '<option selected>Selecione um Estado</option>'+
                             '<option value="AC">Acre</option>'+
@@ -93,6 +93,7 @@ const createClient = () => {
                             '<option value="TO">Tocantins</option>'+
                         '</select>'+
                     '</div>'+
+                    '<label class="block text-red-700 font-bold mb-2">Campos Obrigatórios marcados com <i class="text-red-900">" * "</i> (Asterisco) !!!</label>'+
                 '</form>',
         showCancelButton: true,
         confirmButtonText: 'Criar',
@@ -186,7 +187,7 @@ const updateClient = (client) => {
                     '<div class="mb-6">'+
                         '<label for="state" class="block text-gray-700 font-bold mb-2">Estdos</label>'+
                         '<select id="state" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">'+
-                            '<option value="' + client.address.state +'" selected>Selecione um Estado</option>'+
+                            '<option value="' + client.address.state +'" selected>' + client.address.state + '</option>'+
                             '<option value="AC">Acre</option>'+
                             '<option value="AL">Alagoas</option>'+
                             '<option value="AP">Amapá</option>'+
