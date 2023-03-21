@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Models\Client;
+use App\Models\Contract;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,7 +17,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::with('address')->where('client_status', '!=', 0)->get();
+        $clients = Client::with('address')->get();
         return Inertia::render('Clients/Index', ['clients' => $clients]);
     }
 
@@ -130,9 +131,17 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        $contractsCount = Contract::where('client_id', $client->id)->count();
+
+        if($contractsCount > 0) {
+            return redirect()->route('client.index');
+        }
+
         $address = Address::where('client_id', $client->id);
+
         $address->delete();
         $client->delete();
+        
         return redirect()->route('client.index');
     }
 }

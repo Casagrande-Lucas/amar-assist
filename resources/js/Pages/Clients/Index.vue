@@ -310,6 +310,9 @@ const updateClient = (client) => {
                                     <th scope="col" class="px-6 py-3">
                                         Contato
                                     </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Status
+                                    </th>
                                     <th></th>
                                     <th></th>
                                 </tr>
@@ -327,6 +330,9 @@ const updateClient = (client) => {
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ client.contact }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ (client.client_status == 1) ? "Ativo" : 'Desativado' }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <button type="button" data-bs-toggle="modal" data-bs-target="#modalEdit" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"

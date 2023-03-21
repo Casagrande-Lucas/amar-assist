@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Client;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,8 @@ return new class extends Migration
     {
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
-            $table->set('type_billing', ['banking_billet', 'card', 'pix']);
+            $table->foreignIdFor(Client::class);
+            $table->set('type_billing', ['Boleto', 'Cartão', 'Pix']);
             $table->float('amount');
             $table->float('amount_fine')->nullable();
             $table->tinyInteger('billing_status');

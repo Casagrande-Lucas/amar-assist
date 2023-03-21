@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Client::class);
             $table->set('type_contract', ['PF', 'PJ']);
-            $table->timestamp('cycle');
+            $table->date('cycle');
             $table->timestamps();
         });
     }

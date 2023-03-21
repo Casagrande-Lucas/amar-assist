@@ -15,8 +15,8 @@ class BillingController extends Controller
      */
     public function index()
     {
-        $billing = Billing::all();
-        return Inertia::render('Billings/Index');
+        $billings = Billing::with('client')->get();
+        return Inertia::render('Billings/Index', ['billings' => $billings]);
     }
 
     /**

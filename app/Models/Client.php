@@ -65,4 +65,14 @@ class Client extends Model
     {
         return $this->hasOne(Address::class);
     }
+
+    public function contract()
+    {
+        return $this->hasOne(Contract::class);
+    }
+
+    public function billing()
+    {
+        return $this->hasOne(Billing::class);
+    }
 }
