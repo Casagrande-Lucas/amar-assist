@@ -326,7 +326,7 @@ const updateBilling = (client) => {
                                         {{ billing.type_billing }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        R${{ billing.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace('.', ',') }}
+                                        R${{ billing.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ (billing.amount_fine) ? billing.amount_fine.city : 'N/A' }}
