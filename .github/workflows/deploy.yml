@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }} 
           script: |
             echo Exec Migration ...
-            docker exec -ti amarassist php artisan migrate:refresh --force
+            docker exec -ti amarassist php artisan migrate:refresh -n --force
             echo
             echo
             export GENERAL_TAG=${{env.GENERAL_TAG}}
