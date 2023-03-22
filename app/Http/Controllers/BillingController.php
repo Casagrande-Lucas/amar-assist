@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Tools\CalcularDataVencimentoController;
 use App\Models\Billing;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,7 +38,28 @@ class BillingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'method_payment' => 'required',
+            'amount' => 'required',
+        ]);
+
+        $contract = $request->input('client.contract');
+        $method_payment = $request->input('method_payment');
+        $amount = $request->input('amount');
+
+        $billingData = [
+            'client_id' => $contract['client_id'], 
+            'contract_id' => $contract['id'],
+            'type_billing' => $method_payment,
+            'amount' => $amount,
+            'expiration_date' => CalcularDataVencimentoController::calcularDataVencimento(),
+            'billing_status' => 1
+        ];
+
+        $billing = new Billing($billingData);
+        $billing->save();
+
+        return redirect()->route('client.index');
     }
 
     /**
@@ -69,9 +91,12 @@ class BillingController extends Controller
      * @param  \App\Models\Billing  $billing
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Billing $billing)
+    public function update(Billing $billing)
     {
-        //
+        $billing->billing_status = 0;
+        $billing->saveOrFail();
+
+        return redirect()->route('billing.index');
     }
 
     /**

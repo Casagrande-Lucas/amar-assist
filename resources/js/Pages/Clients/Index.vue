@@ -274,6 +274,57 @@ const updateClient = (client) => {
         }
     })
 };
+
+const createBilling = (client) => {
+    const swalWithTailwindcssButtons = Swal.mixin({
+        buttonsStyling:true
+    })
+    
+    swalWithTailwindcssButtons.fire({
+        title: 'Gerar Cobrança',
+        html: '<form class="px-8 pt-6 pb-8 mb-4">'+
+                    '<div class="mb-6">'+
+                        '<label for="amount" class="block text-gray-700 font-bold mb-2">Valor (R$)<i class="text-red-900">*</i>:</label>'+
+                        '<input id="amount" type="text" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="1.199,99">'+
+                    '</div>'+
+                    '<div class="mb-6">'+
+                        '<label for="method_payment" class="block text-gray-700 font-bold mb-2">Método de Pagamento</label>'+
+                        '<select id="method_payment" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">'+
+                            '<option selected>Selecione o método de pagamento</option>'+
+                            '<option value="Boleto">Boleto</option>'+
+                            '<option value="Cartão">Cartão</option>'+
+                            '<option value="Pix">Pix</option>'+
+                        '</select>'+
+                    '</div>'+
+                '</form>',
+        showCancelButton: true,
+        confirmButtonText: 'Gerar Cobrança',
+        confirmButtonColor: 'green',
+        cancelButtonText: 'Cancelar',
+        focusConfirm: false,
+        didOpen: () => {
+            const amountInput = Swal.getPopup().querySelector('#amount');
+            amountInput.addEventListener('input', () => {
+                let amountValue = amountInput.value.replace(/\D/g, '');
+                amountValue = (amountValue / 100).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                amountInput.value = amountValue;
+            });
+        },
+        preConfirm: () => {
+            const method_payment = Swal.getPopup().querySelector('#method_payment').value
+            
+            const amountInput = Swal.getPopup().querySelector('#amount');
+            const amountString = amountInput.value.replace('R$', '').replace('.', '').replace(',', '.');
+            const amount = parseFloat(amountString).toFixed(2);
+
+            return {client: client, method_payment: method_payment, amount: amount}
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.post(route('billing.store', [client.id, result.value]))
+        }
+    })
+};
 </script>
 
 <template>
@@ -315,6 +366,7 @@ const updateClient = (client) => {
                                     </th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -335,7 +387,13 @@ const updateClient = (client) => {
                                         {{ (client.client_status == 1) ? "Ativo" : 'Desativado' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalEdit" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
+                                        <button type="button" class="focus:outline-none text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-green-900"
+                                        @click="createBilling(client)">
+                                            <i class="fa-solid fa-file-contract"></i>
+                                        </button>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
                                         @click="updateClient(client)">
                                             <i class="fa-solid fa-edit"></i>
                                         </button>

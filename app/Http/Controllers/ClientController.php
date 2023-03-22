@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\Client;
 use App\Models\Contract;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -17,7 +18,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::with('address')->get();
+        $clients = Client::with('address')->with('contract')->get();
         return Inertia::render('Clients/Index', ['clients' => $clients]);
     }
 
@@ -51,12 +52,14 @@ class ClientController extends Controller
 
         $clientData = $request->input('client');
         $addressData = $request->input('address');
+        $contractData = [];
 
         if(strlen($clientData['contact']) == 11) {
             $clientData['type_document'] = 'cpf';
+            $contractData['type_contract'] = 'PF';
         } else {
             $clientData['type_document'] = 'cnpj';
-
+            $contractData['type_contract'] = 'PJ';
         }
 
         $clientData['contact'] = preg_replace("/[^0-9]/", "", $clientData['contact']);
@@ -66,10 +69,16 @@ class ClientController extends Controller
         $client = new Client($clientData);
         $client->save();
 
+        $contractData['client_id'] = $client->id;
+        $contractData['cycle'] = Carbon::now()->addYear()->format('Y-m-d');
+
         $addressData['client_id'] = $client->id;
         $addressData['postal_code'] = preg_replace("/[^0-9]/", "", $addressData['postal_code']);
         $address = new Address($addressData);
         $address->save();
+
+        $contract = new Contract($contractData);
+        $contract->save();
 
         return redirect()->route('client.index');
     }
